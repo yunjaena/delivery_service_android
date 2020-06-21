@@ -1,2 +1,4 @@
 rootProject.name='DeliveryService'
-include ':app'
+include ':customer'
+include ':seller'
+include ':core'
