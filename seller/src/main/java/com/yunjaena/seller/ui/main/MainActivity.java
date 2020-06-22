@@ -1,5 +1,6 @@
 package com.yunjaena.seller.ui.main;
 
+import android.content.Intent;
 import android.os.Bundle;
 import android.view.View;
 import android.widget.Button;
@@ -41,6 +42,7 @@ public class MainActivity extends ActivityBase implements View.OnClickListener, 
 
     private MainPresenter mainPresenter;
     private List<Order> orderList;
+    private List<Order> allOrderList;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -51,8 +53,8 @@ public class MainActivity extends ActivityBase implements View.OnClickListener, 
 
     private void init() {
         orderList = new ArrayList<>();
+        allOrderList = new ArrayList<>();
         mainPresenter = new MainPresenter(this, new MoveRestInteractor());
-        orderList.add(new Order(1,0));
         roomOneStatusImageView = findViewById(R.id.room1_status_image_view);
         roomTwoStatusImageView = findViewById(R.id.room2_status_image_view);
         roomThreeStatusImageView = findViewById(R.id.room3_status_image_view);
@@ -69,10 +71,10 @@ public class MainActivity extends ActivityBase implements View.OnClickListener, 
         orderRecyclerView = findViewById(R.id.order_recycler_view);
         initRecyclerView();
         bindEvent();
-
+        mainPresenter.setOrderListener();
     }
 
-    private void initRecyclerView(){
+    private void initRecyclerView() {
         linearLayoutManager = new LinearLayoutManager(this);
         mainOrderAdapter = new MainOrderAdapter(orderList);
         mainOrderAdapter.setOrderRecyclerViewClickListener(this);
@@ -90,9 +92,49 @@ public class MainActivity extends ActivityBase implements View.OnClickListener, 
         homeMoveButton.setOnClickListener(this);
     }
 
+    private void updateUI() {
+        orderList.clear();
+        for (int i = 0; i < allOrderList.size(); i++) {
+            if (allOrderList.get(i).getDeliveryStatus() != 0) {
+                orderList.add(allOrderList.get(i));
+                setStatusColor(allOrderList.get(i).getRoomNumber(), true);
+            } else {
+                setStatusColor(allOrderList.get(i).getRoomNumber(), false);
+            }
+        }
+        mainOrderAdapter.notifyDataSetChanged();
+    }
+
+    private void setStatusColor(int roomNumber, boolean isOrdered) {
+        ImageView imageView = null;
+        int imageId = (isOrdered) ? R.drawable.ic_circle_green : R.drawable.ic_circle_red;
+        switch (roomNumber) {
+            case 1:
+                imageView = roomOneStatusImageView;
+                break;
+            case 2:
+                imageView = roomTwoStatusImageView;
+                break;
+            case 3:
+                imageView = roomThreeStatusImageView;
+                break;
+            case 4:
+                imageView = roomFourStatusImageView;
+                break;
+            case 5:
+                imageView = roomFiveStatusImageView;
+                break;
+            case 6:
+                imageView = roomSixStatusImageView;
+                break;
+        }
+        if (imageView != null)
+            imageView.setBackground(getResources().getDrawable(imageId));
+    }
+
     @Override
     public void onClick(View v) {
-        switch (v.getId()){
+        switch (v.getId()) {
             case R.id.room1_move_button:
                 mainPresenter.moveRobot("1");
                 break;
@@ -143,8 +185,29 @@ public class MainActivity extends ActivityBase implements View.OnClickListener, 
     }
 
     @Override
-    public void showRoomOrderStatus(int roomNumber, boolean isOrdered) {
-        ToastUtil.getInstance().makeShort(roomNumber + " : " + isOrdered);
+    public void showRoomOrderStatus(List<Order> orderList) {
+        if (hasNewOrder(orderList)) {
+            ToastUtil.getInstance().makeShort("새로운 주문!!!");
+        }
+        allOrderList.clear();
+        allOrderList.addAll(orderList);
+        updateUI();
+    }
+
+    public boolean hasNewOrder(List<Order> orderList) {
+        if (allOrderList.size() == 0)
+            return false;
+
+        for (int a = 0; a < allOrderList.size(); a++) {
+            for (int b = 0; b < orderList.size(); b++) {
+                Order currentOrder = allOrderList.get(a);
+                Order newOrder = orderList.get(b);
+                if (currentOrder.getRoomNumber() == newOrder.getRoomNumber() && currentOrder.getDeliveryStatus() == 0 && newOrder.getDeliveryStatus() != 0) {
+                    return true;
+                }
+            }
+        }
+        return false;
     }
 
     @Override
@@ -161,5 +224,12 @@ public class MainActivity extends ActivityBase implements View.OnClickListener, 
     @Override
     public void onClickOrderButton(int position, boolean isReceipt) {
         ToastUtil.getInstance().makeShort(position + " : " + isReceipt);
+        Order order = orderList.get(position);
+        if(isReceipt)
+            order.setDeliveryStatus(2);
+        else
+            order.setDeliveryStatus(3);
+
+        mainPresenter.updateOrder(order);
     }
 }

@@ -2,8 +2,12 @@
     <string name="app_name">DeliveryService</string>
     <string name="seller">seller</string>
     <string name="progress">처리중</string>
+    <string name="loading">로딩중</string>
+    <string name="load_failed">로딩에 실패하였습니다.</string>
+    <string name="failed">실패하였습니다.</string>
     <string name="failed_moving">이동 명령어 전달에 실패했습니다.</string>
     <string name="success_moving">이동 명령어 전달 완료</string>
+    <string name="send_to_customer">고객님께 전달하였습니다.</string>
     <string name="for_seller">for seller</string>
     <string name="status">주문 현황</string>
     <string name="order">주문</string>
