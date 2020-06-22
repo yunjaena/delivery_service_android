@@ -1,3 +1,20 @@
 <resources>
     <string name="app_name">DeliveryService</string>
+    <string name="seller">seller</string>
+    <string name="progress">처리중</string>
+    <string name="failed_moving">이동 명령어 전달에 실패했습니다.</string>
+    <string name="success_moving">이동 명령어 전달 완료</string>
+    <string name="for_seller">for seller</string>
+    <string name="status">주문 현황</string>
+    <string name="order">주문</string>
+    <string name="receipt">접수</string>
+    <string name="delivery">배달</string>
+    <string name="move">이동</string>
+    <string name="room1">room1</string>
+    <string name="room2">room2</string>
+    <string name="room3">room3</string>
+    <string name="room4">room4</string>
+    <string name="room5">room5</string>
+    <string name="room6">room6</string>
+    <string name="home">home</string>
 </resources>
