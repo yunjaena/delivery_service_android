@@ -1,4 +1,4 @@
-package com.yunjaena.seller.data.network.interactor;
+package com.yunjaena.deliveryservice.data.network.interactor;
 
 import android.util.Log;
 
@@ -15,9 +15,9 @@ import com.google.firebase.database.Query;
 import com.google.firebase.database.ValueEventListener;
 import com.yunjaena.core.network.ApiCallback;
 import com.yunjaena.core.network.RetrofitManager;
-import com.yunjaena.seller.data.entity.DefaultResponse;
-import com.yunjaena.seller.data.entity.Order;
-import com.yunjaena.seller.data.network.service.MoveService;
+import com.yunjaena.deliveryservice.data.entity.DefaultResponse;
+import com.yunjaena.deliveryservice.data.entity.Order;
+import com.yunjaena.deliveryservice.data.network.service.MoveService;
 
 import java.util.ArrayList;
 import java.util.HashMap;

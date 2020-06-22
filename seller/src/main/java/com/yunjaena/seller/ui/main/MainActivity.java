@@ -189,6 +189,11 @@ public class MainActivity extends ActivityBase implements View.OnClickListener, 
         if (hasNewOrder(orderList)) {
             ToastUtil.getInstance().makeShort("새로운 주문!!!");
         }
+
+        if (isDeliveryEnd(orderList)) {
+            ToastUtil.getInstance().makeShort("배달이 완료되었습니다.");
+        }
+
         allOrderList.clear();
         allOrderList.addAll(orderList);
         updateUI();
@@ -210,6 +215,23 @@ public class MainActivity extends ActivityBase implements View.OnClickListener, 
         return false;
     }
 
+    public boolean isDeliveryEnd(List<Order> orderList) {
+        if (allOrderList.size() == 0)
+            return false;
+
+        for (int a = 0; a < allOrderList.size(); a++) {
+            for (int b = 0; b < orderList.size(); b++) {
+                Order currentOrder = allOrderList.get(a);
+                Order newOrder = orderList.get(b);
+                if (currentOrder.getRoomNumber() == newOrder.getRoomNumber() && currentOrder.getDeliveryStatus() != 0 && newOrder.getDeliveryStatus() == 0) {
+                    return true;
+                }
+            }
+        }
+        return false;
+    }
+
+
     @Override
     public void setPresenter(MainPresenter presenter) {
         this.mainPresenter = presenter;
@@ -223,7 +245,6 @@ public class MainActivity extends ActivityBase implements View.OnClickListener, 
 
     @Override
     public void onClickOrderButton(int position, boolean isReceipt) {
-        ToastUtil.getInstance().makeShort(position + " : " + isReceipt);
         Order order = orderList.get(position);
         if(isReceipt)
             order.setDeliveryStatus(2);
