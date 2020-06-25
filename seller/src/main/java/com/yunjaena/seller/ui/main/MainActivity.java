@@ -1,6 +1,6 @@
 package com.yunjaena.seller.ui.main;
 
-import android.content.Intent;
+import android.os.Build;
 import android.os.Bundle;
 import android.view.View;
 import android.widget.Button;
@@ -10,6 +10,7 @@ import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.yunjaena.core.activity.ActivityBase;
+import com.yunjaena.core.notification.NotificationManager;
 import com.yunjaena.core.toast.ToastUtil;
 import com.yunjaena.seller.R;
 import com.yunjaena.seller.data.entity.Order;
@@ -23,6 +24,7 @@ import java.util.List;
 
 
 public class MainActivity extends ActivityBase implements View.OnClickListener, MainContract.View, MainOrderAdapter.OrderRecyclerViewClickListener {
+    public static final int NOTIFICATION_CHANNEL_ID = 100;
     private ImageView roomOneStatusImageView;
     private ImageView roomTwoStatusImageView;
     private ImageView roomThreeStatusImageView;
@@ -187,16 +189,30 @@ public class MainActivity extends ActivityBase implements View.OnClickListener, 
     @Override
     public void showRoomOrderStatus(List<Order> orderList) {
         if (hasNewOrder(orderList)) {
-            ToastUtil.getInstance().makeShort("새로운 주문!!!");
+            ToastUtil.getInstance().makeShort(R.string.new_order);
+            showDeliveryStatusNotification(getResources().getString(R.string.new_order));
+        }
+        else if(isDeliveryCanceled(orderList)){
+            ToastUtil.getInstance().makeShort(R.string.order_cancel);
+            showDeliveryStatusNotification(getResources().getString(R.string.order_cancel));
+        }
+        else if (isDeliveryEnd(orderList)) {
+            ToastUtil.getInstance().makeShort(R.string.delivery_finish);
+            showDeliveryStatusNotification(getResources().getString(R.string.delivery_finish));
         }
 
-        if (isDeliveryEnd(orderList)) {
-            ToastUtil.getInstance().makeShort("배달이 완료되었습니다.");
-        }
 
         allOrderList.clear();
         allOrderList.addAll(orderList);
         updateUI();
+    }
+
+    private void showDeliveryStatusNotification(String message) {
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
+            NotificationManager.sendNotification(this, NOTIFICATION_CHANNEL_ID, NotificationManager.Channel.MESSAGE, getResources().getString(R.string.app_name), message);
+        } else {
+            NotificationManager.sendNotification(this, NOTIFICATION_CHANNEL_ID, getResources().getString(R.string.app_name), message);
+        }
     }
 
     public boolean hasNewOrder(List<Order> orderList) {
@@ -223,7 +239,24 @@ public class MainActivity extends ActivityBase implements View.OnClickListener, 
             for (int b = 0; b < orderList.size(); b++) {
                 Order currentOrder = allOrderList.get(a);
                 Order newOrder = orderList.get(b);
-                if (currentOrder.getRoomNumber() == newOrder.getRoomNumber() && currentOrder.getDeliveryStatus() != 0 && newOrder.getDeliveryStatus() == 0) {
+                if (currentOrder.getRoomNumber() == newOrder.getRoomNumber() && currentOrder.getDeliveryStatus() == 3 && newOrder.getDeliveryStatus() == 0) {
+                    return true;
+                }
+            }
+        }
+        return false;
+    }
+
+
+    public boolean isDeliveryCanceled(List<Order> orderList) {
+        if (allOrderList.size() == 0)
+            return false;
+
+        for (int a = 0; a < allOrderList.size(); a++) {
+            for (int b = 0; b < orderList.size(); b++) {
+                Order currentOrder = allOrderList.get(a);
+                Order newOrder = orderList.get(b);
+                if (currentOrder.getRoomNumber() == newOrder.getRoomNumber() && currentOrder.getDeliveryStatus() != 3 && currentOrder.getDeliveryStatus() != 0 && newOrder.getDeliveryStatus() == 0) {
                     return true;
                 }
             }
@@ -246,7 +279,7 @@ public class MainActivity extends ActivityBase implements View.OnClickListener, 
     @Override
     public void onClickOrderButton(int position, boolean isReceipt) {
         Order order = orderList.get(position);
-        if(isReceipt)
+        if (isReceipt)
             order.setDeliveryStatus(2);
         else
             order.setDeliveryStatus(3);

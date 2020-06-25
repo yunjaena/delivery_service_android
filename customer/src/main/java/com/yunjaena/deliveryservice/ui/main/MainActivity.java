@@ -1,5 +1,6 @@
 package com.yunjaena.deliveryservice.ui.main;
 
+import android.os.Build;
 import android.os.Bundle;
 import android.view.View;
 import android.widget.AdapterView;
@@ -9,6 +10,7 @@ import android.widget.Spinner;
 import android.widget.TextView;
 
 import com.yunjaena.core.activity.ActivityBase;
+import com.yunjaena.core.notification.NotificationManager;
 import com.yunjaena.core.toast.ToastUtil;
 import com.yunjaena.deliveryservice.R;
 import com.yunjaena.deliveryservice.data.entity.Order;
@@ -20,6 +22,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 public class MainActivity extends ActivityBase implements MainContract.View {
+    public static int NOTIFICATION_CHANNEL_ID = 100;
     private Button deliveryStatusButton;
     private TextView deliveryStatusTextView;
     private Spinner roomNumberSpinner;
@@ -92,6 +95,7 @@ public class MainActivity extends ActivityBase implements MainContract.View {
 
         Order order = getCurrentRoomOrder(currentRoomNumber);
         setDeliveryStatusTextView(order.getDeliveryStatus());
+        showDeliveryStatusNotification(order.getDeliveryStatus());
         setDeliveryStatusButton(order.getDeliveryStatus());
 
     }
@@ -118,12 +122,39 @@ public class MainActivity extends ActivityBase implements MainContract.View {
 
     }
 
+    private void showDeliveryStatusNotification(int status) {
+        String statusText = "";
+        switch (status) {
+            case 0:
+                statusText = getResources().getString(R.string.order_wait);
+                break;
+            case 1:
+                statusText = getResources().getString(R.string.receipt_wait);
+                break;
+            case 2:
+                statusText = getResources().getString(R.string.delivery_wait);
+                break;
+            case 3:
+                statusText = getResources().getString(R.string.delivery_now);
+                break;
+        }
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
+            NotificationManager.sendNotification(this, NOTIFICATION_CHANNEL_ID, NotificationManager.Channel.MESSAGE, getResources().getString(R.string.app_name), statusText);
+        } else {
+            NotificationManager.sendNotification(this, NOTIFICATION_CHANNEL_ID, getResources().getString(R.string.app_name), statusText);
+        }
+    }
+
 
     private void setDeliveryStatusButton(int status) {
         String statusText = "";
         switch (status) {
             case 0:
                 statusText = getResources().getString(R.string.order);
+                break;
+            case 1:
+            case 2:
+                statusText = getResources().getString(R.string.order_cancel);
                 break;
             default:
                 statusText = getResources().getString(R.string.delivery_finish);

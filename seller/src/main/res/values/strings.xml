@@ -11,6 +11,9 @@
     <string name="for_seller">for seller</string>
     <string name="status">주문 현황</string>
     <string name="order">주문</string>
+    <string name="new_order">새로운 주문!!!</string>
+    <string name="order_cancel">주문이 취소되었습니다.</string>
+    <string name="delivery_finish">배달이 완료되었습니다.</string>
     <string name="receipt">접수</string>
     <string name="delivery">배달</string>
     <string name="move">이동</string>

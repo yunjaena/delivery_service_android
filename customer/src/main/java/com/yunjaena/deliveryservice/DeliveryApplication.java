@@ -3,6 +3,7 @@ package com.yunjaena.deliveryservice;
 import android.app.Application;
 import android.content.Context;
 
+import com.yunjaena.core.notification.NotificationManager;
 import com.yunjaena.core.toast.ToastUtil;
 
 public class DeliveryApplication extends Application {
@@ -17,5 +18,6 @@ public class DeliveryApplication extends Application {
     public void init() {
         applicationContext = this;
         ToastUtil.getInstance().init(applicationContext);
+        NotificationManager.createChannel(applicationContext);
     }
 }

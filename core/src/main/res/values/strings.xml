@@ -1,3 +1,5 @@
 <resources>
     <string name="app_name">DeliveryService</string>
+    <string name="notification_channel_message_title">DeliveryService</string>
+    <string name="notification_channel_message_description">DeliveryService Notification</string>
 </resources>

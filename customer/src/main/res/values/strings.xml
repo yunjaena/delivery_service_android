@@ -4,6 +4,7 @@
     <string name="room_number">방번호</string>
     <string name="delivery_status">배송 상태</string>
     <string name="order">주문하기</string>
+    <string name="order_cancel">주문취소</string>
     <string name="order_wait">주문대기</string>
     <string name="receipt_wait">접수대기</string>
     <string name="delivery_wait">배달대기</string>
