@@ -1,0 +1,17 @@
+<resources>
+    <string name="app_name">DeliveryService</string>
+    <string name="for_customer">for customer</string>
+    <string name="room_number">방번호</string>
+    <string name="delivery_status">배송 상태</string>
+    <string name="order">주문하기</string>
+    <string name="order_cancel">주문취소</string>
+    <string name="order_wait">주문대기</string>
+    <string name="receipt_wait">접수대기</string>
+    <string name="delivery_wait">배달대기</string>
+    <string name="delivery_now">배달중</string>
+    <string name="delivery_finish">배달완료</string>
+    <string name="progress">주문중</string>
+    <string name="failed">접수에 실패하였습니다.</string>
+    <string name="finish_order">주문완료!</string>
+    <string name="thanks_for_using">이용해주셔서 감사합니다.</string>
+</resources>
