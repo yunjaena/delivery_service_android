@@ -1,6 +1,8 @@
 # Delivery service for Android
 
 Smart IoT delivery service
+- Customer
+- Seller
 
 ## Team member
 
